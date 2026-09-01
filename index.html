@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#08140f">
+<title>Cocada dos Sonhos • Vendas & Rotas</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{
+ --bg:#07110d;--panel:#0d1b15;--panel2:#11251c;--line:#1d382b;--text:#f4f8f5;--muted:#91a69a;
+ --green:#35d07f;--green2:#15945a;--orange:#ff9f43;--red:#ff5d67;--blue:#55a9ff;--white:#fff;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea{font:inherit}
+button{border:0;cursor:pointer}
+.app{height:100dvh;display:grid;grid-template-rows:auto 1fr auto;position:relative}
+header{height:66px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,17,13,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);z-index:1000}
+.brand{display:flex;gap:10px;align-items:center}.logo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#1fa866,#0b5435);font-size:22px;box-shadow:0 8px 24px #0005}
+.brand h1{font-size:15px;margin:0}.brand p{font-size:10px;color:var(--muted);margin:3px 0 0}
+.status{display:flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid var(--line);border-radius:12px;font-size:10px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:#666}.dot.on{background:var(--green);box-shadow:0 0 12px var(--green)}.dot.err{background:var(--red)}
+#map{min-height:0;width:100%;background:#dbe4dc}
+.leaflet-control-attribution{font-size:8px}
+.top-actions{display:flex;gap:7px;align-items:center}.iconbtn{width:38px;height:38px;border-radius:12px;background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+.bottom{background:rgba(8,20,15,.96);border-top:1px solid var(--line);z-index:1000;padding-bottom:max(4px,env(safe-area-inset-bottom))}
+.nav{height:61px;display:grid;grid-template-columns:repeat(5,1fr)}
+.nav button{background:transparent;color:var(--muted);font-size:10px;font-weight:700;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center}
+.nav button b{font-size:19px;line-height:1}.nav button.active{color:var(--green)}
+.sheet{position:absolute;left:10px;right:10px;bottom:75px;max-height:62dvh;background:rgba(10,26,19,.97);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:22px;z-index:900;box-shadow:0 20px 60px #0008;overflow:hidden;display:none}
+.sheet.open{display:block}.sheet-head{padding:14px 16px 8px;display:flex;align-items:center;justify-content:space-between}.sheet-head h2{font-size:14px;margin:0}.close{background:#172b21;color:var(--text);width:32px;height:32px;border-radius:10px}
+.content{padding:8px 16px 16px;overflow:auto;max-height:55dvh}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.card{background:var(--panel2);border:1px solid var(--line);border-radius:15px;padding:12px 8px}.card .n{font-size:19px;font-weight:850}.card .l{font-size:9px;color:var(--muted);margin-top:3px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}.primary,.secondary,.danger{padding:13px;border-radius:13px;font-weight:800}.primary{background:linear-gradient(135deg,var(--green),var(--green2));color:#04130c}.secondary{background:#173025;color:var(--text);border:1px solid var(--line)}.danger{background:#411b20;color:#ffb8bd}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.product{padding:13px;border-radius:15px;background:var(--panel2);border:1px solid var(--line);color:var(--text);text-align:left}.product.sel{border-color:var(--green);box-shadow:0 0 0 1px #35d07f44 inset}.product strong{display:block;font-size:20px;color:var(--green)}.product span{font-size:10px;color:var(--muted)}
+.qty{display:flex;align-items:center;justify-content:space-between;margin:13px 0}.step{display:flex;align-items:center;gap:12px}.step button{width:35px;height:35px;border-radius:50%;background:#173025;color:var(--text);font-size:21px}.step b{font-size:18px}
+.field{width:100%;padding:12px;border-radius:12px;background:#091710;border:1px solid var(--line);color:var(--text);outline:none;margin-bottom:10px}.field:focus{border-color:var(--green)}
+.list{display:flex;flex-direction:column;gap:8px}.item{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:11px;display:flex;justify-content:space-between;gap:10px}.item strong{font-size:12px}.item small{color:var(--muted);font-size:9px;line-height:1.5}.money{font-weight:850;color:var(--green);white-space:nowrap}
+.route-row{display:flex;gap:9px;align-items:center}.route-icon{width:38px;height:38px;border-radius:12px;background:#173025;display:grid;place-items:center}.route-row>div:nth-child(2){flex:1}
+.badge{font-size:8px;padding:4px 6px;border-radius:7px;background:#183d2c;color:var(--green)}
+.empty{text-align:center;color:var(--muted);padding:25px 10px;font-size:12px}
+#toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#07110d;color:#fff;border:1px solid var(--line);padding:11px 15px;border-radius:13px;font-size:11px;z-index:3000;transition:.25s;white-space:nowrap;max-width:90vw}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.sale-pin{background:#0f6c42;border:3px solid #fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:16px;box-shadow:0 5px 16px #0005}
+.me-pin{background:#248cff;border:3px solid #fff;width:18px;height:18px;border-radius:50%;box-shadow:0 0 0 8px #248cff22}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#0d1b15;color:#fff}.leaflet-popup-content{font-size:11px}
+@media(min-width:800px){.sheet{left:auto;width:390px;right:18px;bottom:90px}.nav{width:500px;margin:auto}}
+</style>
+</head>
+<body>
+    <!-- ===== TELA DE LOGIN - COLAR LOGO APÓS <body> ===== -->
+<div id="tela-login" style="
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    background: linear-gradient(135deg, #0d2818, #1a3d2a);
+    z-index: 99999; display:flex; align-items:center; justify-content:center;
+    font-family: sans-serif;
+">
+  <div style="
+      background:#132818; padding:32px 24px; border-radius:16px;
+      width:85%; max-width:340px; box-shadow:0 8px 24px rgba(0,0,0,0.4);
+      text-align:center; border:1px solid #2a5c3a;
+  ">
+    <div style="font-size:42px; margin-bottom:8px;">🥥</div>
+    <h2 style="color:#fff; margin:0 0 4px;">Cocada dos Sonhos</h2>
+    <p style="color:#8fb99e; font-size:13px; margin:0 0 20px;">Acesso restrito</p>
+
+    <input id="login-nome" type="text" placeholder="Seu nome"
+      style="width:100%; box-sizing:border-box; padding:12px; margin-bottom:10px;
+      border-radius:8px; border:1px solid #2a5c3a; background:#0d2818;
+      color:#fff; font-size:15px;">
+
+    <input id="login-senha" type="password" placeholder="Senha"
+      style="width:100%; box-sizing:border-box; padding:12px; margin-bottom:10px;
+      border-radius:8px; border:1px solid #2a5c3a; background:#0d2818;
+      color:#fff; font-size:15px;">
+
+    <button onclick="tentarLogin()" style="
+        width:100%; padding:13px; border:none; border-radius:8px;
+        background:#2ecc71; color:#0d2818; font-weight:bold; font-size:15px;
+        cursor:pointer; margin-top:6px;
+    ">Entrar</button>
+
+    <p id="login-erro" style="color:#ff6b6b; font-size:13px; margin-top:10px; display:none;">
+      Senha incorreta. Tente de novo.
+    </p>
+  </div>
+</div>
+
+<script>
+  // ===== TROQUE A SENHA AQUI =====
+  const SENHA_CORRETA = "cocada2026";
+
+  // Verifica se já logou antes (fica salvo no navegador)
+  if (localStorage.getItem('cocada_autenticado') === 'sim') {
+    document.getElementById('tela-login').style.display = 'none';
+  }
+
+  function tentarLogin() {
+    const nome = document.getElementById('login-nome').value.trim();
+    const senha = document.getElementById('login-senha').value;
+    const erro = document.getElementById('login-erro');
+
+    if (!nome) {
+      erro.textContent = 'Digite seu nome.';
+      erro.style.display = 'block';
+      return;
+    }
+
+    if (senha === SENHA_CORRETA) {
+      localStorage.setItem('cocada_autenticado', 'sim');
+      localStorage.setItem('cocada_usuario_nome', nome);
+      document.getElementById('tela-login').style.display = 'none';
+    } else {
+      erro.style.display = 'block';
+      document.getElementById('login-senha').value = '';
+    }
+  }
+
+  // Permite apertar Enter pra logar
+  document.getElementById('login-senha').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') tentarLogin();
+  });
+</script>
+<!-- ===== FIM DA TELA DE LOGIN ===== -->
+<div class="app">
+<header>
+ <div class="brand"><div class="logo">🥥</div><div><h1>Cocada dos Sonhos</h1><p id="date"></p></div></div>
+ <div class="top-actions"><div class="status"><i id="gpsDot" class="dot"></i><span id="gpsText">GPS</span></div><button class="iconbtn" onclick="centerMe()">⌾</button></div>
+</header>
+
+<div id="map"></div>
+
+<div id="sheet" class="sheet">
+ <div class="sheet-head"><h2 id="sheetTitle">Registrar venda</h2><button class="close" onclick="closeSheet()">×</button></div>
+ <div id="sheetContent" class="content"></div>
+</div>
+
+<div class="bottom">
+ <nav class="nav">
+  <button class="active" data-tab="home" onclick="openTab('home')"><b>⌾</b>Mapa</button>
+  <button data-tab="sale" onclick="openTab('sale')"><b>＋</b>Venda</button>
+  <button data-tab="routes" onclick="openTab('routes')"><b>↗</b>Rotas</button>
+  <button data-tab="history" onclick="openTab('history')"><b>◷</b>Histórico</button>
+  <button data-tab="more" onclick="openTab('more')"><b>⋯</b>Mais</button>
+ </nav>
+</div>
+<div id="toast"></div>
+
+<script>
+const K={sales:'cocada_sales_v3',routes:'cocada_routes_v3',config:'cocada_config_v3'};
+let state={
+ sales:JSON.parse(localStorage.getItem(K.sales)||'[]'),
+ routes:JSON.parse(localStorage.getItem(K.routes)||'[]'),
+ config:{unit:10,box:40,...JSON.parse(localStorage.getItem(K.config)||'{}')}
+};
+let map,watchId=null,meMarker=null,routeLine=null,routeCoords=[],routeStartedAt=null,lastPoint=null,totalRouteMeters=0;
+let saleType='unit',qty=1,tracking=false,saleMarkers=[];
+
+const $=id=>document.getElementById(id);
+const money=v=>'R$ '+Number(v).toFixed(2).replace('.',',');
+const today=()=>new Date().toLocaleDateString('pt-BR');
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function save(){localStorage.setItem(K.sales,JSON.stringify(state.sales));localStorage.setItem(K.routes,JSON.stringify(state.routes));localStorage.setItem(K.config,JSON.stringify(state.config))}
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
+
+function init(){
+ $('date').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+ map=L.map('map',{zoomControl:false}).setView([-22.9,-42.32],14);
+ L.control.zoom({position:'bottomright'}).addTo(map);
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'© OpenStreetMap'}).addTo(map);
+ routeLine=L.polyline([],{color:'#18a85e',weight:6,opacity:.8,lineCap:'round',lineJoin:'round'}).addTo(map);
+ restoreRoutes(); restoreSales(); startGPS();
+}
+function restoreRoutes(){
+ const all=state.routes.flatMap(r=>r.points||[]);
+ if(all.length){routeLine.setLatLngs(all.map(p=>[p.lat,p.lng]));map.fitBounds(routeLine.getBounds().pad(.15))}
+ state.routes.forEach(r=>drawRoute(r));
+}
+function drawRoute(r){
+ if(!r.points||r.points.length<2)return;
+ L.polyline(r.points.map(p=>[p.lat,p.lng]),{color:'#5b7f6d',weight:4,opacity:.45}).addTo(map);
+}
+function startGPS(){
+ if(!navigator.geolocation){$('gpsText').textContent='Sem GPS';$('gpsDot').className='dot err';return}
+ watchId=navigator.geolocation.watchPosition(onGPS,onGPSErr,{enableHighAccuracy:true,maximumAge:5000,timeout:15000});
+}
+function onGPSErr(e){$('gpsDot').className='dot err';$('gpsText').textContent='GPS erro'}
+function onGPS(pos){
+ const p={lat:pos.coords.latitude,lng:pos.coords.longitude,acc:pos.coords.accuracy,time:Date.now()};
+ $('gpsDot').className='dot on';$('gpsText').textContent=Math.round(p.acc)+'m';
+ if(!meMarker){
+  meMarker=L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:'<div class="me-pin"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(map);
+  map.setView([p.lat,p.lng],16);
+ }else meMarker.setLatLng([p.lat,p.lng]);
+ if(tracking) addTrackPoint(p);
+ lastPoint=p;
+}
+function startTracking(){
+ if(tracking)return;
+ tracking=true;routeCoords=[];totalRouteMeters=0;routeStartedAt=Date.now();
+ routeLine.setLatLngs([]);
+ $('trackBtn').textContent='■ Parar deslocamento';
+ $('trackBtn').className='danger';
+ toast('● Rastreamento iniciado');
+ if(lastPoint)addTrackPoint(lastPoint);
+}
+function stopTracking(){
+ if(!tracking)return;
+ tracking=false;
+ if(routeCoords.length>1){
+  const r={id:Date.now(),date:today(),start:routeStartedAt,end:Date.now(),distance:totalRouteMeters,points:routeCoords};
+  state.routes.push(r);save();drawRoute(r);
+ }
+ $('trackBtn').textContent='▶ Iniciar deslocamento';$('trackBtn').className='primary';
+ toast('Rota salva no histórico');
+}
+function addTrackPoint(p){
+ if(!lastPoint && !routeCoords.length){routeCoords.push(p);routeLine.setLatLngs([[p.lat,p.lng]]);return}
+ const prev=routeCoords[routeCoords.length-1];
+ if(!prev){routeCoords.push(p);return}
+ const d=distance(prev.lat,prev.lng,p.lat,p.lng);
+ if(d<8 || d>500)return; // ignora ruído e saltos
+ totalRouteMeters+=d;routeCoords.push(p);
+ routeLine.addLatLng([p.lat,p.lng]);
+}
+function distance(a,b,c,d){
+ const R=6371000,x=(c-a)*Math.PI/180,y=(d-b)*Math.PI/180;
+ const q=Math.sin(x/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(y/2)**2;
+ return 2*R*Math.atan2(Math.sqrt(q),Math.sqrt(1-q));
+}
+async function reverse(lat,lng){
+ try{
+  const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,{headers:{'Accept-Language':'pt-BR'}});
+  const j=await r.json(),a=j.address||{};
+  return {street:a.road||a.pedestrian||'Rua não identificada',neighborhood:a.neighbourhood||a.suburb||'Bairro não identificado',city:a.city||a.town||a.municipality||'',full:j.display_name||`${lat.toFixed(5)}, ${lng.toFixed(5)}`};
+ }catch{return {street:'Localização GPS',neighborhood:'',city:'',full:`${lat.toFixed(5)}, ${lng.toFixed(5)}`}}
+}
+function openTab(tab){
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+ if(tab==='home'){closeSheet();return}
+ $('sheet').classList.add('open');
+ if(tab==='sale'){ $('sheetTitle').textContent='Registrar venda';renderSale()}
+ if(tab==='routes'){ $('sheetTitle').textContent='Histórico de deslocamento';renderRoutes()}
+ if(tab==='history'){ $('sheetTitle').textContent='Histórico de vendas';renderHistory()}
+ if(tab==='more'){ $('sheetTitle').textContent='Resumo e configurações';renderMore()}
+}
+function closeSheet(){$('sheet').classList.remove('open');document.querySelectorAll('.nav button').forEach((b,i)=>b.classList.toggle('active',i===0))}
+function renderSale(){
+ $('sheetContent').innerHTML=`
+ <div class="cards"><div class="card"><div class="n">${money(state.sales.filter(s=>s.date===today()).reduce((a,s)=>a+s.total,0))}</div><div class="l">HOJE</div></div><div class="card"><div class="n">${state.sales.filter(s=>s.date===today()).length}</div><div class="l">VENDAS</div></div><div class="card"><div class="n">${formatKm(totalHistoricalKm())}</div><div class="l">KM REGISTRADOS</div></div></div>
+ <div class="product-grid">
+  <button class="product ${saleType==='unit'?'sel':''}" onclick="saleType='unit';renderSale()"><strong>${money(state.config.unit)}</strong><span>Unidade 🥥</span></button>
+  <button class="product ${saleType==='box'?'sel':''}" onclick="saleType='box';renderSale()"><strong>${money(state.config.box)}</strong><span>Caixa 📦</span></button>
+ </div>
+ <div class="qty"><b>Quantidade</b><div class="step"><button onclick="qty=Math.max(1,qty-1);renderSale()">−</button><b>${qty}</b><button onclick="qty++;renderSale()">+</button></div></div>
+ <div class="item" style="margin-bottom:10px"><strong>Total</strong><strong class="money">${money((saleType==='unit'?state.config.unit:state.config.box)*qty)}</strong></div>
+ <textarea id="obs" class="field" rows="2" placeholder="Observação (opcional)"></textarea>
+ <button class="primary" onclick="registerSale()">✓ Registrar venda neste ponto</button>
+ <div class="actions"><button id="trackBtn" class="${tracking?'danger':'secondary'}" onclick="${tracking?'stopTracking()':'startTracking()'}">${tracking?'■ Parar deslocamento':'▶ Iniciar deslocamento'}</button><button class="secondary" onclick="centerMe()">⌾ Minha posição</button></div>
+ <small style="color:var(--muted)">O deslocamento só é gravado quando você iniciar o rastreamento. A venda grava automaticamente o ponto GPS.</small>`;
+}
+async function registerSale(){
+ if(!lastPoint){toast('Aguardando GPS');return}
+ const obs=($('obs')?.value||'').trim(), price=saleType==='unit'?state.config.unit:state.config.box;
+ toast('Localizando endereço…');
+ const a=await reverse(lastPoint.lat,lastPoint.lng);
+ const s={id:Date.now(),type:saleType,qty,total:price*qty,obs,date:today(),time:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),lat:lastPoint.lat,lng:lastPoint.lng,accuracy:lastPoint.acc,...a};
+ state.sales.push(s);save();addSaleMarker(s);qty=1;renderSale();toast('Venda registrada no ponto GPS');
+}
+function addSaleMarker(s){
+ const m=L.marker([s.lat,s.lng],{icon:L.divIcon({className:'',html:'<div class="sale-pin">🥥</div>',iconSize:[34,34],iconAnchor:[17,34]})}).addTo(map);
+ m.bindPopup(`<b>${s.qty}× ${s.type==='unit'?'Unidade':'Caixa'}</b><br><strong>${money(s.total)}</strong><br>${esc(s.street)} · ${esc(s.neighborhood)}<br><small>${s.date} ${s.time}</small>${s.obs?'<br>'+esc(s.obs):''}`);
+ saleMarkers.push(m);
+}
+function restoreSales(){state.sales.forEach(addSaleMarker)}
+function renderRoutes(){
+ const routes=[...state.routes].reverse();
+ const km=totalHistoricalKm();
+ $('sheetContent').innerHTML=`
+ <div class="cards"><div class="card"><div class="n">${routes.length}</div><div class="l">SAÍDAS</div></div><div class="card"><div class="n">${formatKm(km)}</div><div class="l">DISTÂNCIA</div></div><div class="card"><div class="n">${state.sales.length}</div><div class="l">VENDAS</div></div></div>
+ <div class="actions"><button id="trackBtn" class="${tracking?'danger':'primary'}" onclick="${tracking?'stopTracking()':'startTracking()'}">${tracking?'■ Parar deslocamento':'▶ Iniciar deslocamento'}</button><button class="secondary" onclick="fitAllRoutes()">⌗ Ver tudo</button></div>
+ <div class="list">${routes.length?routes.map(r=>`<div class="item route-row" onclick="showRoute(${r.id})"><div class="route-icon">↗</div><div><strong>${r.date}</strong><br><small>${new Date(r.start).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})} · ${r.points?.length||0} pontos</small></div><span class="money">${formatKm(r.distance)}</span></div>`).join(''):'<div class="empty">Nenhum deslocamento salvo.<br>Inicie o rastreamento antes de sair.</div>'}</div>`;
+}
+function renderHistory(){
+ const list=[...state.sales].reverse();
+ $('sheetContent').innerHTML=`
+ <div class="cards"><div class="card"><div class="n">${money(state.sales.reduce((a,s)=>a+s.total,0))}</div><div class="l">TOTAL</div></div><div class="card"><div class="n">${state.sales.length}</div><div class="l">VENDAS</div></div><div class="card"><div class="n">${state.sales.reduce((a,s)=>a+s.qty,0)}</div><div class="l">UNIDADES</div></div></div>
+ <div class="list">${list.length?list.map(s=>`<div class="item" onclick="showSale(${s.id})"><div><strong>${s.qty}× ${s.type==='unit'?'Unidade':'Caixa'} · ${money(s.total)}</strong><br><small>📍 ${esc(s.street)} · ${esc(s.neighborhood)}<br>${s.date} ${s.time}</small></div><span class="badge">GPS</span></div>`).join(''):'<div class="empty">Nenhuma venda registrada.</div>'}</div>`;
+}
+function renderMore(){
+ $('sheetContent').innerHTML=`
+ <div class="cards"><div class="card"><div class="n">${money(state.sales.filter(s=>s.date===today()).reduce((a,s)=>a+s.total,0))}</div><div class="l">HOJE</div></div><div class="card"><div class="n">${formatKm(totalHistoricalKm())}</div><div class="l">KM</div></div><div class="card"><div class="n">${state.routes.length}</div><div class="l">ROTAS</div></div></div>
+ <label style="font-size:10px;color:var(--muted)">Preço unidade</label><input id="unitPrice" class="field" type="number" step=".01" value="${state.config.unit}">
+ <label style="font-size:10px;color:var(--muted)">Preço caixa</label><input id="boxPrice" class="field" type="number" step=".01" value="${state.config.box}">
+ <button class="primary" onclick="saveConfig()">Salvar preços</button>
+ <div class="actions"><button class="secondary" onclick="exportData()">Exportar backup</button><button class="danger" onclick="clearAll()">Apagar dados</button></div>
+ <small style="color:var(--muted)">Backup inclui vendas, pontos GPS e histórico completo das rotas.</small>`;
+}
+function saveConfig(){state.config.unit=Number($('unitPrice').value)||10;state.config.box=Number($('boxPrice').value)||40;save();toast('Preços salvos');renderMore()}
+function totalHistoricalKm(){return state.routes.reduce((a,r)=>a+(r.distance||0),0)/1000}
+function formatKm(km){return km<1?Math.round(km*1000)+' m':km.toFixed(2)+' km'}
+function centerMe(){if(lastPoint){map.setView([lastPoint.lat,lastPoint.lng],17);return}toast('Aguardando GPS')}
+function fitAllRoutes(){const pts=state.routes.flatMap(r=>r.points||[]);if(pts.length)map.fitBounds(L.latLngBounds(pts.map(p=>[p.lat,p.lng])).pad(.15));else toast('Sem histórico')}
+function showRoute(id){const r=state.routes.find(x=>x.id===id);if(r?.points?.length)map.fitBounds(L.latLngBounds(r.points.map(p=>[p.lat,p.lng])).pad(.2))}
+function showSale(id){const s=state.sales.find(x=>x.id===id);if(s){map.setView([s.lat,s.lng],18);L.popup().setLatLng([s.lat,s.lng]).setContent(`<b>${s.qty}× ${s.type==='unit'?'Unidade':'Caixa'}</b><br>${money(s.total)}<br>${esc(s.street)} · ${esc(s.neighborhood)}`).openOn(map)}}
+function exportData(){
+ const data={app:'Cocada Vendas & Rotas',version:3,exportedAt:new Date().toISOString(),sales:state.sales,routes:state.routes,config:state.config};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);a.download='cocada_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);toast('Backup exportado')
+}
+function clearAll(){if(!confirm('Apagar TODAS as vendas e rotas?'))return;localStorage.removeItem(K.sales);localStorage.removeItem(K.routes);location.reload()}
+window.addEventListener('beforeunload',()=>{if(tracking)stopTracking()});
+init();
+</script>
+</body>
+</html>
