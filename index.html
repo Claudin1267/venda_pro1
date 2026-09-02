@@ -22,26 +22,26 @@ header{height:66px;padding:10px 14px;display:flex;align-items:center;justify-con
 .brand h1{font-size:15px;margin:0}.brand p{font-size:10px;color:var(--muted);margin:3px 0 0}
 .status{display:flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid var(--line);border-radius:12px;font-size:10px;color:var(--muted)}
 .dot{width:8px;height:8px;border-radius:50%;background:#666}.dot.on{background:var(--green);box-shadow:0 0 12px var(--green)}.dot.err{background:var(--red)}
-#map{min-height:0;width:100%;background:#dbe4dc}
+#map{min-height:0;width:100%;background:#dbe4dc;height:calc(100dvh - 140px)}
 .leaflet-control-attribution{font-size:8px}
 .top-actions{display:flex;gap:7px;align-items:center}.iconbtn{width:38px;height:38px;border-radius:12px;background:var(--panel2);color:var(--text);border:1px solid var(--line)}
 .bottom{background:rgba(8,20,15,.96);border-top:1px solid var(--line);z-index:1000;padding-bottom:max(4px,env(safe-area-inset-bottom))}
 .nav{height:61px;display:grid;grid-template-columns:repeat(5,1fr)}
 .nav button{background:transparent;color:var(--muted);font-size:10px;font-weight:700;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center}
 .nav button b{font-size:19px;line-height:1}.nav button.active{color:var(--green)}
-.sheet{position:absolute;left:10px;right:10px;bottom:75px;max-height:62dvh;background:rgba(10,26,19,.97);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:22px;z-index:900;box-shadow:0 10px 40px rgba(0,0,0,.4);display:none}
-.sheet.open{display:block}.sheet-head{padding:14px 16px 8px;display:flex;align-items:center;justify-content:space-between}.sheet-head h2{font-size:14px;margin:0}.close{background:#172b21;color:var(--text);border-radius:10px;padding:6px 10px}
+.sheet{position:absolute;left:10px;right:10px;bottom:75px;max-height:62dvh;background:rgba(10,26,19,.97);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:22px;z-index:900;box-shadow:0 10px 30px rgba(0,0,0,0.5);display:none}
+.sheet.open{display:block}.sheet-head{padding:14px 16px 8px;display:flex;align-items:center;justify-content:space-between}.sheet-head h2{font-size:14px;margin:0}.close{background:#172b21;color:var(--text);padding:8px;border-radius:10px}
 .content{padding:8px 16px 16px;overflow:auto;max-height:55dvh}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.card{background:var(--panel2);border:1px solid var(--line);border-radius:15px;padding:12px 8px}.card .n{font-size:19px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}.primary,.secondary,.danger{padding:13px;border-radius:13px;font-weight:800}.primary{background:linear-gradient(135deg,var(--green),var(--green2));color:#05210f}.secondary{background:#173025;color:var(--muted)}.danger{background:linear-gradient(135deg,#ff8a8a,#ff5d67);color:#2a0a0a}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}.primary,.secondary,.danger{padding:13px;border-radius:13px;font-weight:800}.primary{background:linear-gradient(135deg,var(--green),var(--green2));color:#052214}.secondary{background:transparent;border:1px solid var(--line)}.danger{background:linear-gradient(135deg,#ff8f8f,#ff5d67)}
 .product-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.product{padding:13px;border-radius:15px;background:var(--panel2);border:1px solid var(--line);color:var(--text);text-align:left}
-.qty{display:flex;align-items:center;justify-content:space-between;margin:13px 0}.step{display:flex;align-items:center;gap:12px}.step button{width:35px;height:35px;border-radius:50%;background:#173025;color:var(--text);border:1px solid var(--line)}
+.qty{display:flex;align-items:center;justify-content:space-between;margin:13px 0}.step{display:flex;align-items:center;gap:12px}.step button{width:35px;height:35px;border-radius:50%;background:#173025;color:var(--text)}
 .field{width:100%;padding:12px;border-radius:12px;background:#091710;border:1px solid var(--line);color:var(--text);outline:none;margin-bottom:10px}.field:focus{border-color:var(--green)}
 .list{display:flex;flex-direction:column;gap:8px}.item{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:11px;display:flex;justify-content:space-between;gap:10px}
 .route-row{display:flex;gap:9px;align-items:center}.route-icon{width:38px;height:38px;border-radius:12px;background:#173025;display:grid;place-items:center}.route-row>div:nth-child(2){flex:1}
 .badge{font-size:8px;padding:4px 6px;border-radius:7px;background:#183d2c;color:var(--green)}
 .empty{text-align:center;color:var(--muted);padding:25px 10px;font-size:12px}
-#toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#07110d;color:#fff;border:1px solid var(--line);padding:11px 15px;border-radius:13px;transition:all .22s}
+#toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#07110d;color:#fff;border:1px solid var(--line);padding:11px 15px;border-radius:13px;transition:all .25s}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 .sale-pin{background:#0f6c42;border:3px solid #fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:16px;box-shadow:0 5px 16px #0005}
 .me-pin{background:#248cff;border:3px solid #fff;width:18px;height:18px;border-radius:50%;box-shadow:0 0 0 8px #248cff22}
@@ -85,6 +85,35 @@ header{height:66px;padding:10px 14px;display:flex;align-items:center;justify-con
     <p style="color:#a7c8ad; font-size:11px; margin-top:8px;">Se for a primeira vez, isto cria um PIN local e protege seus dados no aparelho.</p>
   </div>
 </div>
+
+<div id="app-root" class="app" style="display:none;">
+  <header>
+    <div class="brand">
+      <div class="logo">🥥</div>
+      <div>
+        <h1>Cocada dos Sonhos</h1>
+        <p>Vendas & Rotas</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="status"><span class="dot on"></span><span id="status-text">Pronto</span></div>
+    </div>
+  </header>
+
+  <main id="map"></main>
+
+  <div class="bottom">
+    <nav class="nav">
+      <button class="active"><b>🏠</b> Home</button>
+      <button><b>📍</b> Vendas</button>
+      <button><b>🧭</b> Rotas</button>
+      <button><b>⚙️</b> Config</button>
+      <button onclick="logoutLocal(true)"><b>⎋</b> Sair</button>
+    </nav>
+  </div>
+</div>
+
+<div id="toast"></div>
 
 <script>
 // CHAVE E CRIPTOGRAFIA (Web Crypto)
@@ -160,4 +189,114 @@ window.sessionPassword = null; // contém a "password" em memória (identifier:p
 const $=id=>document.getElementById(id);
 const money=v=>'R$ '+Number(v).toFixed(2).replace('.',',');
 const today=()=>new Date().toLocaleDateString('pt-BR');
-const esc=s=>String(s??'').replace(/[&<>\
+const esc=s=>String(s??'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" })[c]);
+
+// UI helpers
+function showToast(msg, timeout=2500){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), timeout); }
+
+// Login / unlock
+async function tentarLogin(){
+  const id = $('login-id').value.trim();
+  const pin = $('login-pin').value.trim();
+  const errEl = $('login-erro');
+  errEl.style.display='none';
+  if(!id || !pin){ errEl.textContent='Preencha ID e PIN'; errEl.style.display='block'; return; }
+  try{
+    if(localStorage.getItem(SEC_KEY)){
+      // tentar desbloquear
+      const loaded = await loadEncryptedStateUsing(pin);
+      state = { sales: loaded.sales||[], routes: loaded.routes||[], config: loaded.config||{unit:10,box:40} };
+      window.sessionPassword = pin;
+      afterUnlock();
+      showToast('Desbloqueado com sucesso');
+    } else {
+      // primeiro uso: criar armazenamento cifrado (migrar legacy)
+      window.sessionPassword = pin;
+      await saveEncryptedStateUsing(pin);
+      // remover chaves legadas para evitar duplicação
+      try{ localStorage.removeItem(LEGACY_KEYS.sales); localStorage.removeItem(LEGACY_KEYS.routes); localStorage.removeItem(LEGACY_KEYS.config); }catch(e){}
+      afterUnlock();
+      showToast('Conta criada e dados salvos localmente');
+    }
+  }catch(e){
+    console.error(e);
+    errEl.textContent='PIN inválido ou dados corrompidos'; errEl.style.display='block';
+  }
+}
+
+function logoutLocal(force=false){
+  if(force){
+    localStorage.removeItem(SEC_KEY);
+    localStorage.removeItem(LEGACY_KEYS.sales);
+    localStorage.removeItem(LEGACY_KEYS.routes);
+    localStorage.removeItem(LEGACY_KEYS.config);
+    window.sessionPassword = null;
+    location.reload();
+  } else {
+    // apenas "desbloquear" para tela de login
+    document.getElementById('tela-login').style.display='flex';
+    document.getElementById('app-root').style.display='none';
+    window.sessionPassword = null;
+  }
+}
+
+function afterUnlock(){
+  document.getElementById('tela-login').style.display='none';
+  document.getElementById('app-root').style.display='grid';
+  initMap();
+  renderSales();
+}
+
+// Map and UI
+function initMap(){
+  if(map) return;
+  map = L.map('map', { zoomControl:true }).setView([-23.55, -46.63], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // add marker for current pos if available
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const {latitude,longitude}=pos.coords;
+      meMarker = L.circleMarker([latitude,longitude], { radius:8, color:'#248cff', fillColor:'#248cff' }).addTo(map).bindPopup('Você');
+      map.setView([latitude,longitude], 14);
+    }, err=>console.warn('geo err',err));
+  }
+}
+
+function renderSales(){
+  // clear existing markers
+  saleMarkers.forEach(m=>map.removeLayer(m)); saleMarkers=[];
+  if(!map) return;
+  (state.sales||[]).forEach(sale=>{
+    if(!sale.lat||!sale.lng) return;
+    const m = L.marker([sale.lat,sale.lng], { title: sale.customer||'Venda' }).addTo(map).bindPopup(`<b>${esc(sale.customer||'Venda')}</b><br>${money(sale.total||0)}<br>${esc(sale.note||'')}`);
+    saleMarkers.push(m);
+  });
+}
+
+// auto-save on unload if unlocked
+window.addEventListener('beforeunload', async (e)=>{
+  if(window.sessionPassword){
+    try{ await saveEncryptedStateUsing(window.sessionPassword); }catch(e){ console.warn('save failed',e); }
+  }
+});
+
+// If SEC_KEY exists but not unlocked, show login; otherwise start app
+if(localStorage.getItem(SEC_KEY)){
+  // show login
+  document.getElementById('tela-login').style.display='flex';
+  document.getElementById('app-root').style.display='none';
+} else {
+  // no secure storage -> auto-unlock (use legacy state already loaded)
+  window.sessionPassword = null; // no password in memory
+  // show app immediately (data is from legacy localStorage)
+  document.getElementById('tela-login').style.display='none';
+  document.getElementById('app-root').style.display='grid';
+  initMap(); renderSales();
+}
+
+</script>
+</body>
+</html>
